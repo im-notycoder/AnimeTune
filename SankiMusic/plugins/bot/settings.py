@@ -2,7 +2,7 @@ from pyrogram import filters
 from pyrogram.errors import MessageNotModified
 from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
                             InlineKeyboardMarkup, Message)
-
+import config
 from SankiMusic.utilities.config import (BANNED_USERS, CLEANMODE_DELETE_MINS,
                     MUSIC_BOT_NAME, OWNER_ID)
 from SankiMusic.utilities.strings import get_command
@@ -48,8 +48,20 @@ async def settings_mar(client, message: Message, _):
         reply_markup=InlineKeyboardMarkup(buttons),
     )
 
-
-@bot.on_callback_query(
+@app.on_callback_query(filters.regex("gib_source") & ~BANNED_USERS)
+@languageCB
+async def gib_repo(client, CallbackQuery, _):
+    await CallbackQuery.edit_message_media(
+        InputMediaVideo("https://telegra.ph/file/58e7ac046610f4d912f98.mp4"),
+    ),
+    return await CallbackQuery.edit_message_reply_markup(
+        reply_markup=InlineKeyboardMarkup(
+        [[InlineKeyboardButton(text="ʙᴀᴄᴋ", callback_data=f"settingsback_helper")]]
+        ),
+    )
+    
+    
+@app.on_callback_query(
     filters.regex("settings_helper") & ~BANNED_USERS
 )
 @languageCB
@@ -66,35 +78,6 @@ async def settings_cb(client, CallbackQuery, _):
         ),
         reply_markup=InlineKeyboardMarkup(buttons),
     )
-
-
-@bot.on_callback_query(
-    filters.regex("settingsback_helper") & ~BANNED_USERS
-)
-@languageCB
-async def settings_back_markup(
-    client, CallbackQuery: CallbackQuery, _
-):
-    try:
-        await CallbackQuery.answer()
-    except:
-        pass
-    if CallbackQuery.message.chat.type == "private":
-        try:
-            await bot.resolve_peer(OWNER_ID[0])
-            OWNER = OWNER_ID[0]
-        except:
-            OWNER = None
-        buttons = private_panel(_, bot.username, OWNER)
-        return await CallbackQuery.edit_message_text(
-            _["start_2"].format(MUSIC_BOT_NAME),
-            reply_markup=InlineKeyboardMarkup(buttons),
-        )
-    else:
-        buttons = setting_markup(_)
-        return await CallbackQuery.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
 
 
 ## Audio and Video Quality
