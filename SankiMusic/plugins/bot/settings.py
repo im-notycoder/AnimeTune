@@ -1,6 +1,6 @@
 from pyrogram import filters
 from pyrogram.errors import MessageNotModified
-from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
+from pyrogram.types import (CallbackQuery, InlineKeyboardButton,InputMediaPhoto, InputMediaVideo,
                             InlineKeyboardMarkup, Message)
 import config
 from SankiMusic.utilities.config import (BANNED_USERS, CLEANMODE_DELETE_MINS,
