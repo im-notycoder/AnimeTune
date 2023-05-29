@@ -7,9 +7,9 @@ MONGO_DB_URL=
 DURATION_LIMIT=120
 LOG_GROUP_ID=
 OWNER_ID=
-SUPPORT_CHANNEL=https://t.me/adityaserver
-SUPPORT_GROUP=https://t.me/adityadiscus
-UPSTREAM_REPO=https://github.com/XdityaHalder/SankiMusic
+SUPPORT_CHANNEL=https://t.me/Nxt_bots
+SUPPORT_GROUP=https://t.me/FriendshipWorldGroup
+UPSTREAM_REPO=https://github.com/im-notycoder/AnimeTune
 UPSTREAM_BRANCH=aditya
 AUTO_DOWNLOADS_CLEAR=True
 
