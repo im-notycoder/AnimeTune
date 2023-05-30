@@ -1,13 +1,13 @@
 from pyrogram import filters
 from pyrogram.errors import MessageNotModified
-from pyrogram.types import (CallbackQuery, InlineKeyboardButton, InputMediaPhoto, InputMediaVideo,
+from pyrogram.types import (CallbackQuery, InlineKeyboardButton,InputMediaPhoto, InputMediaVideo,
                             InlineKeyboardMarkup, Message)
 
-from config import (BANNED_USERS, CLEANMODE_DELETE_MINS,
+from SankiMusic.utilities.config import (BANNED_USERS, CLEANMODE_DELETE_MINS,
                     MUSIC_BOT_NAME, OWNER_ID)
-from strings import get_command
-from SankiMusic import app
-from SankiMusic.utils.database import (add_nonadmin_chat,
+from SankiMusic.utilities.strings import get_command
+from SankiMusic import bot
+from SankiMusic.modules.main.database import (add_nonadmin_chat,
                                        cleanmode_off, cleanmode_on,
                                        commanddelete_off,
                                        commanddelete_on,
@@ -22,19 +22,19 @@ from SankiMusic.utils.database import (add_nonadmin_chat,
                                        save_audio_bitrate,
                                        save_video_bitrate,
                                        set_playmode, set_playtype)
-from SankiMusic.utils.decorators.admins import ActualAdminCB
-from SankiMusic.utils.decorators.language import language, languageCB
-from SankiMusic.utils.inline.settings import (
+from SankiMusic.modules.main.decorators.admins import ActualAdminCB
+from SankiMusic.modules.main.decorators.language import language, languageCB
+from SankiMusic.utilities.inline.settings import (
     audio_quality_markup, auth_users_markup,
     cleanmode_settings_markup, playmode_users_markup, setting_markup,
     video_quality_markup)
-from VenomX.utils.inline.start import private_panel
+from SankiMusic.utilities.inline.start import private_panel
 
 ### Command
 SETTINGS_COMMAND = get_command("SETTINGS_COMMAND")
 
 
-@app.on_message(
+@bot.on_message(
     filters.command(SETTINGS_COMMAND)
     & filters.group
     & ~filters.edited
@@ -48,6 +48,7 @@ async def settings_mar(client, message: Message, _):
         reply_markup=InlineKeyboardMarkup(buttons),
     )
 
+
 @app.on_callback_query(filters.regex("gib_source") & ~BANNED_USERS)
 @languageCB
 async def gib_repo(client, CallbackQuery, _):
@@ -58,25 +59,6 @@ async def gib_repo(client, CallbackQuery, _):
         reply_markup=InlineKeyboardMarkup(
         [[InlineKeyboardButton(text="ʙᴀᴄᴋ", callback_data=f"settingsback_helper")]]
         ),
-    )
-
-
-@app.on_callback_query(
-    filters.regex("settings_helper") & ~BANNED_USERS
-)
-@languageCB
-async def settings_cb(client, CallbackQuery, _):
-    try:
-        await CallbackQuery.answer(_["set_cb_8"])
-    except:
-        pass
-    buttons = setting_markup(_)
-    return await CallbackQuery.edit_message_text(
-        _["setting_1"].format(
-            CallbackQuery.message.chat.title,
-            CallbackQuery.message.chat.id,
-        ),
-        reply_markup=InlineKeyboardMarkup(buttons),
     )
 
 
@@ -128,7 +110,7 @@ async def gen_buttons_vid(_, aud):
 # without admin rights
 
 
-@app.on_callback_query(
+@bot.on_callback_query(
     filters.regex(
         pattern=r"^(SEARCHANSWER|PLAYMODEANSWER|PLAYTYPEANSWER|AUTHANSWER|CMANSWER|COMMANDANSWER|CM|AQ|VQ|PM|AU)$"
     )
@@ -254,7 +236,7 @@ async def without_Admin_rights(client, CallbackQuery, _):
 # Audio Video Quality
 
 
-@app.on_callback_query(
+@bot.on_callback_query(
     filters.regex(pattern=r"^(LQA|MQA|HQA|LQV|MQV|HQV)$")
     & ~BANNED_USERS
 )
@@ -300,7 +282,7 @@ async def aud_vid_cb(client, CallbackQuery, _):
 
 
 # Play Mode Settings
-@app.on_callback_query(
+@bot.on_callback_query(
     filters.regex(
         pattern=r"^(|MODECHANGE|CHANNELMODECHANGE|PLAYTYPECHANGE)$"
     )
@@ -395,7 +377,7 @@ async def playmode_ans(client, CallbackQuery, _):
 
 
 # Auth Users Settings
-@app.on_callback_query(
+@bot.on_callback_query(
     filters.regex(pattern=r"^(AUTH|AUTHLIST)$") & ~BANNED_USERS
 )
 @ActualAdminCB
@@ -483,7 +465,7 @@ async def authusers_mar(client, CallbackQuery, _):
 ## Clean Mode
 
 
-@app.on_callback_query(
+@bot.on_callback_query(
     filters.regex(
         pattern=r"^(CLEANMODE|COMMANDELMODE)$"
     )
